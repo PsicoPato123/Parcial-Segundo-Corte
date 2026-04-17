@@ -10,8 +10,28 @@ void estructura mapa(){
 
 }
 
-int cobro(int entrada, int salida,){
-    int valor hora= 6000;
-    int total= (salida-entrada)*valor hora;
+//Función de toma de datos del vehículo
+void vehículos(){
+    std::string placa;
+    std::cout<<"Ingresa la placa: ";
+    std::cin placa;
+
+    time_t HEntrada;
+    int fila, columna;
+    std::cout<<"Ingresa la fila; ";
+    std::cin fila;
+    std::cout<<"Ingresa la columna; ";
+    std::cin columna;
+}
+
+//Función de cálculo del cobro final
+int cobro(int entrada, int salida, int valor_hora){
+    int valor_hora= 6000;
+    int total= (salida-entrada)*valor_hora;
     return total;  
+}
+
+int main(){
+
+    return 0; 
 }
