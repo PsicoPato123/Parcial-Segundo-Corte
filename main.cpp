@@ -12,25 +12,28 @@ struct carro{
 void EstructuraMapa(std::string** mapa, int fila, int columna){
     for(int i = 0; i < fila; i++){
         for(int j = 0; j < columna; j++){
-
-            // Bordes = vías
-            if(i == 0 || i == fila-1 || j == 0 || j == columna-1){
+            // Bordes conocidos como paredes
+            mapa[i][j] = 'Pared';
+            // Calles verticales
+            for(int j = 2; j < columna; j += 4){
+                for(int i = 1; i < fila-1; i++){
                 mapa[i][j] = 'Via';
             }
-            // Calles internas
-            else if(i == fila/2 || j == columna/2){
+            for(int i= 3; i < fila; i+=4){
+                for(int j = 1; j < columna-1; j ++){      
                 mapa[i][j] = 'Via';
             }
-            // Parqueaderos
-            else{
-                mapa[i][j] = 'Acceso';
-            }
-        }
-    }
+            // Espacio de parqueaderos
+            for(int i = 1; i < fila-1; i++){
+                for(int j = 1; j < columna-1; j++){
+                    if(mapa[i][j] != 'Via'){
+                        mapa[i][j] = 'Parqueadero';
+                    } }}   
+        }}
 
     // Entrada y salida
-    mapa[2][3] = 'E';
-    mapa[fila-1][columna-2] = 'S';
+    mapa[2][3] = 'Entrada';
+    mapa[fila-1][columna-2] = 'Salida';
 }
 
 void menu(){
