@@ -7,6 +7,7 @@ struct carro{
     std::string placa;
     time_t entrada;
     int fila, columna;
+    bool ocupado;
 };
 
 void EstructuraMapa(std::string** mapa, int fila, int columna){
