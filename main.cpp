@@ -40,7 +40,6 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
             mapa[2][3] = "Entrada";
             mapa[fila-2][columna-4] = "Salida";
 }
-
     //Creación de función que haga visible el mapa
     void MostrarMapa(std::string** mapa, int fila, int columna){
         for (int i = 0; i < fila; i++){
@@ -75,7 +74,17 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
     }
 }}}
 
-   
+bool Disponible (char** mapa, int fila, int columna){ 
+    int libre = 0, ocupado= 0; 
+    for(int i = 0; i < fila; i++){ 
+        for(int j = 0; j < columna; j++){
+             if(mapa[i][j] == 'L') libre++; 
+             if(mapa[i][j] == 'O') ocupado++; } 
+            }
+            std::cout << "\nDisponibles: " << libre;
+            std::cout << "\nOcupados: " << ocupado << std::endl; }
+
+
 void menu(){
     int opt;
     std::cout<<"Bienvenido a tu Pati-adero Cuack"<<std::endl; 
@@ -84,8 +93,20 @@ void menu(){
     std::cout<<"3. Ver Pati-espacios"<<std::endl;
     std::cout<<"4. Mostrar Pati-mapa"<<std::endl;
     std::cout<<"5. Pati-salida";
-    std::cout<<"Selecciona una Pati-opcion: ";
+    std::cout<<"Selecciona una Pati-opcion: \n";
+    std::cin>>opt;
 
-
+    switch (opt){
+    case 1:
+        break;
+    case  4:
+    MostrarMapa();
+        break;
+    default:
+        break;
+    }
 }
 
+int main (){
+    menu();
+}
