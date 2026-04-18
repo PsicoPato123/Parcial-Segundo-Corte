@@ -42,22 +42,7 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
 }
     //Creación de función que haga visible el mapa
     void MostrarMapa(std::string** mapa, int fila, int columna){
-        for (int i = 0; i < fila; i++){
-            for(int j = 0; j < columna; j++){
-
-            //Brinda color al mapa segun el área
-                if(mapa[i][j] == "Pared"){
-                    std::cout<<RED<<"P"<<RESET;
-                } else if(mapa[i][j] == "Via"){
-                    std::cout<<GREEN<<"V"<<RESET;
-                } else if(mapa[i][j] == "P"){
-                    std::cout<<YELLOW<<"P"<<RESET;
-                } else if(mapa[i][j] == "Entrada"){
-                    std::cout<<BLUE<<"E"<<RESET;
-                } else if(mapa[i][j] == "Salida"){
-                    std::cout<<MAGENTA<<"S"<<RESET;
-                }
-        //Define la división del mapa             
+        //Se define la estructura y división del mapa
         std::cout << "\n   ";
             for(int j = 0; j < columna; j++){
             std::cout << j+1 << " ";  //número de columnas
@@ -67,25 +52,38 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
             for(int i = 0; i < fila; i++){
             char letra = 'A' + i; //Conversión de la letra conforme avanza (ChatGPT)
             std::cout << letra << "  ";
+
                 for(int j = 0; j < columna; j++){
-                std::cout << mapa[i][j] << " ";
-        }
+            //Brinda color al mapa segun el área
+                if(mapa[i][j] == "Pared"){
+                    std::cout<<RED<<"Pared"<<RESET;
+                } else if(mapa[i][j] == "Via"){
+                    std::cout<<GREEN<<"Via"<<RESET;
+                } else if(mapa[i][j] == "P"){
+                    std::cout<<YELLOW<<"Parqueadero"<<RESET;
+                } else if(mapa[i][j] == "Entrada"){
+                    std::cout<<BLUE<<"Entrada"<<RESET;
+                } else if(mapa[i][j] == "Salida"){
+                    std::cout<<MAGENTA<<"Salida"<<RESET;
+                }     
         std::cout << std::endl;
     }
-}}}
+}}
 
-bool Disponible (char** mapa, int fila, int columna){ 
+bool Disponible (std::string** mapa, int fila, int columna){ 
     int libre = 0, ocupado= 0; 
     for(int i = 0; i < fila; i++){ 
         for(int j = 0; j < columna; j++){
-             if(mapa[i][j] == 'L') libre++; 
-             if(mapa[i][j] == 'O') ocupado++; } 
+             if(mapa[i][j] == "L") libre++; 
+             if(mapa[i][j] == "O") ocupado++; } 
             }
             std::cout << "\nDisponibles: " << libre;
-            std::cout << "\nOcupados: " << ocupado << std::endl; }
+            return libre;
+            std::cout << "\nOcupados: " << ocupado << std::endl;
+            return ocupado; 
+        }
 
-
-void menu(){
+void menu(std::string** mapa, int fila, int columna){
     int opt;
     std::cout<<"Bienvenido a tu Pati-adero Cuack"<<std::endl; 
     std::cout<<"1. Ingresar Pati-vehiculo"<<std::endl;
@@ -100,13 +98,14 @@ void menu(){
     case 1:
         break;
     case  4:
-    MostrarMapa();
+    MostrarMapa(mapa, fila, columna);
         break;
     default:
         break;
     }
 }
 
-int main (){
+int main (){  
+    EstructuraMapa(mapa,fila);
     menu();
 }
