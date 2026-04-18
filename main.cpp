@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <ctime>
+#include <ctime> //conocida por Web y ChatGPT
 #include "color.h"
 
 struct carro{
@@ -36,12 +36,46 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
                     mapa[i-1][j] == "V" || mapa[i+1][j] == "V"){
                     mapa[i][j] = "P";
                 }}} }
-
-    // Entrada y salida
-    mapa[2][3] = "Entrada";
-    mapa[fila-2][columna-4] = "Salida";
+        // Entrada y salida
+            mapa[2][3] = "Entrada";
+            mapa[fila-2][columna-4] = "Salida";
 }
 
+    //Creación de función que haga visible el mapa
+    void MostrarMapa(std::string** mapa, int fila, int columna){
+        for (int i = 0; i < fila; i++){
+            for(int j = 0; j < columna; j++){
+
+            //Brinda color al mapa segun el área
+                if(mapa[i][j] == "Pared"){
+                    std::cout<<RED<<"P"<<RESET;
+                } else if(mapa[i][j] == "Via"){
+                    std::cout<<GREEN<<"V"<<RESET;
+                } else if(mapa[i][j] == "P"){
+                    std::cout<<YELLOW<<"P"<<RESET;
+                } else if(mapa[i][j] == "Entrada"){
+                    std::cout<<BLUE<<"E"<<RESET;
+                } else if(mapa[i][j] == "Salida"){
+                    std::cout<<MAGENTA<<"S"<<RESET;
+                }
+        //Define la división del mapa             
+        std::cout << "\n   ";
+            for(int j = 0; j < columna; j++){
+            std::cout << j+1 << " ";  //número de columnas
+            }
+            std::cout << std::endl;
+
+            for(int i = 0; i < fila; i++){
+            char letra = 'A' + i; //Conversión de la letra conforme avanza (ChatGPT)
+            std::cout << letra << "  ";
+                for(int j = 0; j < columna; j++){
+                std::cout << mapa[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}}}
+
+   
 void menu(){
     int opt;
     std::cout<<"Bienvenido a tu Pati-adero Cuack"<<std::endl; 
