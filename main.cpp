@@ -89,14 +89,13 @@ void ingresovehiculo(std::string** mapa,carro* lista, int fila, int columna, int
     std::cin >> pos;
 
     int fila = pos[0] - 'A'; // Conversión de letra a índice
-    int columna = std::stoi(pos.substr(1)) - 1; // Conversión
+    int columna = std::stoi(pos.substr(1)) - 1; // Conversión (apoyo de ChatGPT)
     if(mapa[fila][columna] == "Parqueadero"){
         mapa[fila][columna] = "O"; // Marca el espacio como ocupado
         std::cout << "Paticarro de placa " << placa << " ingresado en " << pos << std::endl;
     } else {
         std::cout << "La posición " << pos << " no es un parqueadero disponible." << std::endl;
     }
-
     //registro del vehiculo en el sistema
     mapa[fila][columna] = 'O';
 
@@ -107,26 +106,38 @@ void ingresovehiculo(std::string** mapa,carro* lista, int fila, int columna, int
     total++; 
     std::cout << "Paticarro registrado con éxito :D" << std::endl;
 }
+//función para calcular la tarifa de acuerdo al tiempo de parqueo
+int calcularTarifa(std::string** mapa, carro* lista, int fila, int columna, int total){
+    time_t salida = time(0); 
+    for(int i = 0; i < total; i++){
+        if(lista[i].fila == fila && lista[i].columna == columna){
+            double horas = difftime(salida, lista[i].entrada) / 3600; // Conversión a horas
+            int tarifa = (horas * 6000); // Tarifa de $6000 por hora
+            return tarifa;
+        }
+    }
+    return 0; // Si no se encuentra el vehículo, no se cobra
+}
 //función para retirar un vehículo del parqueadero y cobro de tarifa 
 void retirovehiculo(std::string** mapa, carro* lista, int fila, int columna, int& total){
     std::string placa;
     std::cout << "Ingrese la placa del paticarro a retirar: ";
     std::cin >> placa;
-
+    // Cálculo de tarifa
+    int tarifa = calcularTarifa(mapa, lista, fila, columna, total);
     for(int i = 0; i < total; i++){
         if(lista[i].placa == placa){
             int fila = lista[i].fila;
             int columna = lista[i].columna;
             mapa[fila][columna] = "Parqueadero"; // Hace que el espacio se vuelva disponible
             std::cout << "Paticarro de placa " << placa << " retirado del parqueadero." << std::endl;
-            return;
+        
+            std::cout << "Paticarro" << placa << " salió.\n";
+            std::cout << "Valor a pagar: $" << tarifa << "\n";
         }else{
             std::cout << "Paticarro con placa " << placa << " no encontrado en el parqueadero." << std::endl;
         }
-        
 }
-
-
 
 //Creación de menú
 void menu(std::string** mapa, int fila, int columna){
