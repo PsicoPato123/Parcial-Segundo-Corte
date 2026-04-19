@@ -2,6 +2,7 @@
 #include <string>
 #include <ctime> //conocida por Web y ChatGPT
 #include "color.h"
+#include <fstream>
 
 struct carro{
     std::string placa;
@@ -10,38 +11,39 @@ struct carro{
 };
 
 void EstructuraMapa(std::string** mapa, int fila, int columna){
+    // Bordes conocidos como paredes
     for(int i = 0; i < fila; i++){
         for(int j = 0; j < columna; j++){
-            // Bordes conocidos como paredes
-            mapa[i][j] = "Pared";
+            mapa[i][j] = "P";
         }}
             // Calles verticales
             for(int j = 2; j < columna; j += 4){
                 for(int i = 1; i < fila-1; i++){
-                mapa[i][j] = "Via";
+                mapa[i][j] = "V";
             }}
             //Calles horizontales 
             for(int i= 3; i < fila; i+=4){
                 for(int j = 1; j < columna-1; j ++){      
-                mapa[i][j] = "Via";
+                mapa[i][j] = "V";
             }}
 
             // Espacio de parqueaderos
             for(int i = 1; i < fila-1; i++){
                 for(int j = 1; j < columna-1; j++){
-                    if(mapa[i][j] == "Pared"){
+                    if(mapa[i][j] == "P"){
                         //declaración de espacios de parqueo
-                    if(mapa[i][j-1] == "Via" || mapa[i][j+1] == "Via" ||
-                    mapa[i-1][j] == "Via" || mapa[i+1][j] == "Via"){
-                    mapa[i][j] = "Parqueadero";
+                    if(mapa[i][j-1] == "V" || mapa[i][j+1] == "V" ||
+                    mapa[i-1][j] == "V" || mapa[i+1][j] == "V"){
+                    mapa[i][j] = "Park";
                 }}} }
 
         // Entrada y salida
-            mapa[2][3] = "Entrada";
-            mapa[fila-2][columna-4] = "Salida";
+            mapa[2][3] = "E";
+            mapa[fila-2][columna-4] = "S";
 }
     //Creación de función que haga visible el mapa
     void MostrarMapa(std::string** mapa, int fila, int columna){
+        std::ofstream file("Mapa.txt");
         //Se define la estructura y división del mapa
         std::cout << "\n   ";
             for(int j = 0; j < columna; j++){
@@ -49,22 +51,25 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
             }
             std::cout << std::endl;
 
+
             for(int i = 0; i < fila; i++){
             char letra = 'A' + i; //Conversión de la letra conforme avanza (ChatGPT)
             std::cout << letra << "  ";
 
                 for(int j = 0; j < columna; j++){
             //Brinda color al mapa segun el área
-                if(mapa[i][j] == "Pared"){
-                    std::cout<<RED<<"Pared "<<RESET;
-                } else if(mapa[i][j] == "Via"){
-                    std::cout<<GREEN<<"Via"<<RESET;
-                } else if(mapa[i][j] == "Parqueadero"){
-                    std::cout<<YELLOW<<"Parqueadero "<<RESET;
-                } else if(mapa[i][j] == "Entrada"){
-                    std::cout<<BLUE<<"Entrada"<<RESET;
-                } else if(mapa[i][j] == "Salida"){
-                    std::cout<<MAGENTA<<"Salida"<<RESET;
+                if(mapa[i][j] == "P"){
+                    std::cout<<RED<<"P "<<RESET;
+                } else if(mapa[i][j] == "V"){
+                    std::cout<<GREEN<<"V "<<RESET;
+                } else if(mapa[i][j] == "Park"){
+                    std::cout<<YELLOW<<"Park "<<RESET;
+                } else if(mapa[i][j] == "E"){
+                    std::cout<<BLUE<<"E"<<RESET;
+                } else if(mapa[i][j] == "S"){
+                    std::cout<<MAGENTA<<"S"<<RESET;}
+                    else if(mapa[i][j] == "O"){
+                     std::cout<<CYAN<<"O"<<RESET;
                 }}
         std::cout << std::endl;
 }}
@@ -73,8 +78,13 @@ void Disponible (std::string** mapa, int fila, int columna){
     int libre = 0, ocupado= 0; 
     for(int i = 0; i < fila; i++){ 
         for(int j = 0; j < columna; j++){
-             if(mapa[i][j] == "Parqueadero") libre++; 
-             if(mapa[i][j] == "O") ocupado++; } 
+             if(mapa[i][j] == "Park") libre++; 
+             if(mapa[i][j] == "O") ocupado++; 
+            else if(mapa[i][j] == "Ocupado"){
+            std::cout<<CYAN<<"O "<<RESET;}
+            else if(mapa[i][j] == "Parqueadero"){
+            std::cout<<YELLOW<<"L "<<RESET;
+}} 
             }
             std::cout << "\nDisponibles: " << libre;
             std::cout << "\nOcupados: " << ocupado << std::endl;
@@ -86,11 +96,15 @@ void ingresovehiculo(std::string** mapa,carro* lista, int fila, int columna, int
     std::cin >> placa;
     std::cout << "Ingrese la posición de parqueo (Ejemplo: A1): ";
     std::cin >> pos;
+    if(pos.length() < 2){ //habla de la longitud del string 
+    std::cout << "Formato invalido\n";
+    return;
+}
 
-    std::string letra = pos.substr(0, 1); // Extracción de la letra
+    char letra = toupper(pos[0]); // Extracción de la letra
     int numero = std::stoi(pos.substr(1)); // Extracción del número
 
-    int filas = letra[0] - 'A'; // Conversión de letra a índice
+    int filas = letra - 'A'; // Conversión de letra a índice
     int columnas = numero - 1; // Conversión del número a índice
 
     if(filas < 0 || filas >= fila || columnas < 0 || columnas >= columna){
@@ -149,12 +163,14 @@ void retirovehiculo(std::string** mapa, carro* lista, int fila, int columna, int
         }}
         if(!encontrado){
             std::cout << "Paticarro con placa " << placa << " no encontrado en el parqueadero." << std::endl;
+            encontrado = true;   
         }}
 //Creación de menú
-void menu(std::string** mapa, int fila, int columna,carro* lista){
+int menu(std::string** mapa, int fila, int columna,carro* lista){
     int opt;
     int total = 0; // Contador de vehículos registrados
-    std::cout<<"Bienvenido a tu Pati-adero Cuack"<<std::endl; 
+    std::cout<<"Bienvenido a tu Pati-adero Cuack"<<std::endl;
+    do{ 
     std::cout<<"1. Ingresar Pati-vehiculo"<<std::endl;
     std::cout<<"2. Retirar Pati-vehiculo"<<std::endl;
     std::cout<<"3. Ver Pati-espacios"<<std::endl;
@@ -163,8 +179,7 @@ void menu(std::string** mapa, int fila, int columna,carro* lista){
     std::cout<<"Selecciona una Pati-opcion: \n";
     std::cin>>opt;
 
-    do{ 
-        switch (opt){
+    switch (opt){
     case 1:
     ingresovehiculo(mapa,lista,fila, columna, total);
         break;
@@ -177,10 +192,17 @@ void menu(std::string** mapa, int fila, int columna,carro* lista){
     case  4:
     MostrarMapa(mapa, fila, columna);
         break;
+
+    case 5:
+    std::cout<<"Hasta luego visitante ^w^ ";
+    break;
+
     default:
-        break;
-    }}while (opt !=5);
-}
+    std::cout<<"Opción inválida X.X \n"; RESET;  
+        break;};}
+     while (opt !=5); 
+    return 0;
+    }
 
 int main (){  
     //Creación del mapa dinámico
