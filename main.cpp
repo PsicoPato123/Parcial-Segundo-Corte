@@ -83,7 +83,7 @@ void Disponible (std::string** mapa, int fila, int columna){
 //Función para ingresar un vehículo al parqueadero
 void ingresovehiculo(std::string** mapa,carro* lista, int fila, int columna, int& total){
     std::string placa, pos;
-    std::cout << "Ingrese la placa del vehículo: ";
+    std::cout << "Ingrese la placa del paticarro: ";
     std::cin >> placa;
     std::cout << "Ingrese la posición de parqueo (Ejemplo: A1): ";
     std::cin >> pos;
@@ -92,7 +92,7 @@ void ingresovehiculo(std::string** mapa,carro* lista, int fila, int columna, int
     int columna = std::stoi(pos.substr(1)) - 1; // Conversión
     if(mapa[fila][columna] == "Parqueadero"){
         mapa[fila][columna] = "O"; // Marca el espacio como ocupado
-        std::cout << "Vehículo de placa " << placa << " ingresado en " << pos << std::endl;
+        std::cout << "Paticarro de placa " << placa << " ingresado en " << pos << std::endl;
     } else {
         std::cout << "La posición " << pos << " no es un parqueadero disponible." << std::endl;
     }
@@ -104,12 +104,34 @@ void ingresovehiculo(std::string** mapa,carro* lista, int fila, int columna, int
     lista[total].entrada = time(0);
     lista[total].fila = fila;
     lista[total].columna = columna;
+    total++; 
+    std::cout << "Paticarro registrado con éxito :D" << std::endl;
 }
+//función para retirar un vehículo del parqueadero y cobro de tarifa 
+void retirovehiculo(std::string** mapa, carro* lista, int fila, int columna, int& total){
+    std::string placa;
+    std::cout << "Ingrese la placa del paticarro a retirar: ";
+    std::cin >> placa;
+
+    for(int i = 0; i < total; i++){
+        if(lista[i].placa == placa){
+            int fila = lista[i].fila;
+            int columna = lista[i].columna;
+            mapa[fila][columna] = "Parqueadero"; // Hace que el espacio se vuelva disponible
+            std::cout << "Paticarro de placa " << placa << " retirado del parqueadero." << std::endl;
+            return;
+        }else{
+            std::cout << "Paticarro con placa " << placa << " no encontrado en el parqueadero." << std::endl;
+        }
+        
+}
+
+
 
 //Creación de menú
 void menu(std::string** mapa, int fila, int columna){
     int opt;
-    std::cout<<"Bienvenido a tu Pati-adero Cuack"<<std::endl; 
+    std::cout<<"Bienvenid   o a tu Pati-adero Cuack"<<std::endl; 
     std::cout<<"1. Ingresar Pati-vehiculo"<<std::endl;
     std::cout<<"2. Retirar Pati-vehiculo"<<std::endl;
     std::cout<<"3. Ver Pati-espacios"<<std::endl;
