@@ -80,7 +80,31 @@ void Disponible (std::string** mapa, int fila, int columna){
             std::cout << "\nDisponibles: " << libre;
             std::cout << "\nOcupados: " << ocupado << std::endl;
         }
+//Función para ingresar un vehículo al parqueadero
+void ingresovehiculo(std::string** mapa,carro* lista, int fila, int columna, int& total){
+    std::string placa, pos;
+    std::cout << "Ingrese la placa del vehículo: ";
+    std::cin >> placa;
+    std::cout << "Ingrese la posición de parqueo (Ejemplo: A1): ";
+    std::cin >> pos;
 
+    int fila = pos[0] - 'A'; // Conversión de letra a índice
+    int columna = std::stoi(pos.substr(1)) - 1; // Conversión
+    if(mapa[fila][columna] == "Parqueadero"){
+        mapa[fila][columna] = "O"; // Marca el espacio como ocupado
+        std::cout << "Vehículo de placa " << placa << " ingresado en " << pos << std::endl;
+    } else {
+        std::cout << "La posición " << pos << " no es un parqueadero disponible." << std::endl;
+    }
+
+    //registro del vehiculo en el sistema
+    mapa[fila][columna] = 'O';
+
+    lista[total].placa = placa;
+    lista[total].entrada = time(0);
+    lista[total].fila = fila;
+    lista[total].columna = columna;
+}
 
 //Creación de menú
 void menu(std::string** mapa, int fila, int columna){
@@ -102,23 +126,6 @@ void menu(std::string** mapa, int fila, int columna){
         break;
     default:
         break;
-    }
-}
-//Función para ingresar un vehículo al parqueadero
-void ingresovehiculo(std::string** mapa, int fila, int columna){
-    std::string placa, pos;
-    std::cout << "Ingrese la placa del vehículo: ";
-    std::cin >> placa;
-    std::cout << "Ingrese la posición de parqueo (Ejemplo: A1): ";
-    std::cin >> pos;
-
-    int fila = pos[0] - 'A'; // Conversión de letra a índice
-    int columna = std::stoi(pos.substr(1)) - 1; // Conversión
-    if(mapa[fila][columna] == "Parqueadero"){
-        mapa[fila][columna] = "O"; // Marca el espacio como ocupado
-        std::cout << "Vehículo de placa " << placa << " ingresado en " << pos << std::endl;
-    } else {
-        std::cout << "La posición " << pos << " no es un parqueadero disponible." << std::endl;
     }
 }
 
