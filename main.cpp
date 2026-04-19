@@ -69,7 +69,7 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
                 }}
         std::cout << std::endl;
 }}
-
+//Función para contar los espacios disponibles 
 void Disponible (std::string** mapa, int fila, int columna){ 
     int libre = 0, ocupado= 0; 
     for(int i = 0; i < fila; i++){ 
@@ -81,6 +81,8 @@ void Disponible (std::string** mapa, int fila, int columna){
             std::cout << "\nOcupados: " << ocupado << std::endl;
         }
 
+
+//Creación de menú
 void menu(std::string** mapa, int fila, int columna){
     int opt;
     std::cout<<"Bienvenido a tu Pati-adero Cuack"<<std::endl; 
@@ -100,6 +102,23 @@ void menu(std::string** mapa, int fila, int columna){
         break;
     default:
         break;
+    }
+}
+//Función para ingresar un vehículo al parqueadero
+void ingresovehiculo(std::string** mapa, int fila, int columna){
+    std::string placa, pos;
+    std::cout << "Ingrese la placa del vehículo: ";
+    std::cin >> placa;
+    std::cout << "Ingrese la posición de parqueo (Ejemplo: A1): ";
+    std::cin >> pos;
+
+    int fila = pos[0] - 'A'; // Conversión de letra a índice
+    int columna = std::stoi(pos.substr(1)) - 1; // Conversión
+    if(mapa[fila][columna] == "Parqueadero"){
+        mapa[fila][columna] = "O"; // Marca el espacio como ocupado
+        std::cout << "Vehículo de placa " << placa << " ingresado en " << pos << std::endl;
+    } else {
+        std::cout << "La posición " << pos << " no es un parqueadero disponible." << std::endl;
     }
 }
 
