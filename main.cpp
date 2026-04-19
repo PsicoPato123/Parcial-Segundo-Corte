@@ -7,7 +7,6 @@ struct carro{
     std::string placa;
     time_t entrada;
     int fila, columna;
-    bool ocupado;
 };
 
 void EstructuraMapa(std::string** mapa, int fila, int columna){
@@ -32,7 +31,7 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
                 for(int j = 1; j < columna-1; j++){
                     if(mapa[i][j] == "Pared"){
                         //declaración de espacios de parqueo
-                        if(mapa[i][j-1] == "Via" || mapa[i][j+1] == "Via" ||
+                    if(mapa[i][j-1] == "Via" || mapa[i][j+1] == "Via" ||
                     mapa[i-1][j] == "Via" || mapa[i+1][j] == "Via"){
                     mapa[i][j] = "Parqueadero";
                 }}} }
@@ -58,14 +57,14 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
             //Brinda color al mapa segun el área
                 if(mapa[i][j] == "Pared"){
                     std::cout<<RED<<"Pared "<<RESET;
-                } else if(mapa[i][j] == "Via "){
-                    std::cout<<GREEN<<"Via "<<RESET;
-                } else if(mapa[i][j] == "P"){
+                } else if(mapa[i][j] == "Via"){
+                    std::cout<<GREEN<<"Via"<<RESET;
+                } else if(mapa[i][j] == "Parqueadero"){
                     std::cout<<YELLOW<<"Parqueadero "<<RESET;
-                } else if(mapa[i][j] == "Entrada "){
-                    std::cout<<BLUE<<"Entrada "<<RESET;
-                } else if(mapa[i][j] == "Salida "){
-                    std::cout<<MAGENTA<<"Salida "<<RESET;
+                } else if(mapa[i][j] == "Entrada"){
+                    std::cout<<BLUE<<"Entrada"<<RESET;
+                } else if(mapa[i][j] == "Salida"){
+                    std::cout<<MAGENTA<<"Salida"<<RESET;
                 }}
         std::cout << std::endl;
 }}
@@ -74,7 +73,7 @@ void Disponible (std::string** mapa, int fila, int columna){
     int libre = 0, ocupado= 0; 
     for(int i = 0; i < fila; i++){ 
         for(int j = 0; j < columna; j++){
-             if(mapa[i][j] == "P") libre++; 
+             if(mapa[i][j] == "Parqueadero") libre++; 
              if(mapa[i][j] == "O") ocupado++; } 
             }
             std::cout << "\nDisponibles: " << libre;
@@ -88,21 +87,27 @@ void ingresovehiculo(std::string** mapa,carro* lista, int fila, int columna, int
     std::cout << "Ingrese la posición de parqueo (Ejemplo: A1): ";
     std::cin >> pos;
 
-    int fila = pos[0] - 'A'; // Conversión de letra a índice
-    int columna = std::stoi(pos.substr(1)) - 1; // Conversión (apoyo de ChatGPT)
-    if(mapa[fila][columna] == "Parqueadero"){
-        mapa[fila][columna] = "O"; // Marca el espacio como ocupado
-        std::cout << "Paticarro de placa " << placa << " ingresado en " << pos << std::endl;
-    } else {
-        std::cout << "La posición " << pos << " no es un parqueadero disponible." << std::endl;
-    }
-    //registro del vehiculo en el sistema
-    mapa[fila][columna] = 'O';
+    std::string letra = pos.substr(0, 1); // Extracción de la letra
+    int numero = std::stoi(pos.substr(1)); // Extracción del número
 
+    int filas = letra[0] - 'A'; // Conversión de letra a índice
+    int columnas = numero - 1; // Conversión del número a índice
+
+    if(filas < 0 || filas >= fila || columnas < 0 || columnas >= columna){
+        std::cout << "Posicion invalida\n";
+        return;
+    }
+    if(mapa[filas][columnas] != "Parqueadero"){
+        std::cout << "No disponible :c\n";
+        return;
+    }
+
+    //registro del vehiculo en el sistema
+    mapa[filas][columnas] = "Ocupado"; // Marca el espacio como ocupado
     lista[total].placa = placa;
     lista[total].entrada = time(0);
-    lista[total].fila = fila;
-    lista[total].columna = columna;
+    lista[total].fila = filas;
+    lista[total].columna = columnas;
     total++; 
     std::cout << "Paticarro registrado con éxito :D" << std::endl;
 }
@@ -123,43 +128,58 @@ void retirovehiculo(std::string** mapa, carro* lista, int fila, int columna, int
     std::string placa;
     std::cout << "Ingrese la placa del paticarro a retirar: ";
     std::cin >> placa;
+    bool encontrado = false;
     // Cálculo de tarifa
-    int tarifa = calcularTarifa(mapa, lista, fila, columna, total);
+
     for(int i = 0; i < total; i++){
         if(lista[i].placa == placa){
-            int fila = lista[i].fila;
-            int columna = lista[i].columna;
-            mapa[fila][columna] = "Parqueadero"; // Hace que el espacio se vuelva disponible
+            int f = lista[i].fila;
+            int c = lista[i].columna;
+
+            int costo = calcularTarifa (mapa, lista, f, c, total);
+            
+            mapa[f][c] = "Parqueadero"; // Hace que el espacio se vuelva disponible
             std::cout << "Paticarro de placa " << placa << " retirado del parqueadero." << std::endl;
         
             std::cout << "Paticarro" << placa << " salió.\n";
-            std::cout << "Valor a pagar: $" << tarifa << "\n";
-        }else{
+            std::cout << "Valor a pagar: $" << costo << "\n";
+            
+            lista[i] = lista[total - 1]; 
+            total--; // Reduce el total de vehículos registrados
+        }}
+        if(!encontrado){
             std::cout << "Paticarro con placa " << placa << " no encontrado en el parqueadero." << std::endl;
-        }
-}
-
+        }}
 //Creación de menú
-void menu(std::string** mapa, int fila, int columna){
+void menu(std::string** mapa, int fila, int columna,carro* lista){
     int opt;
-    std::cout<<"Bienvenid   o a tu Pati-adero Cuack"<<std::endl; 
+    int total = 0; // Contador de vehículos registrados
+    std::cout<<"Bienvenido a tu Pati-adero Cuack"<<std::endl; 
     std::cout<<"1. Ingresar Pati-vehiculo"<<std::endl;
     std::cout<<"2. Retirar Pati-vehiculo"<<std::endl;
     std::cout<<"3. Ver Pati-espacios"<<std::endl;
     std::cout<<"4. Mostrar Pati-mapa"<<std::endl;
-    std::cout<<"5. Pati-salida";
+    std::cout<<"5. Pati-salida\n";
     std::cout<<"Selecciona una Pati-opcion: \n";
     std::cin>>opt;
 
-    switch (opt){
+    do{ 
+        switch (opt){
     case 1:
+    ingresovehiculo(mapa,lista,fila, columna, total);
+        break;
+    case 2: 
+    retirovehiculo(mapa, lista, fila, columna, total);
+        break;
+    case 3:
+    Disponible(mapa, fila, columna);
         break;
     case  4:
     MostrarMapa(mapa, fila, columna);
         break;
     default:
         break;
-    }
+    }}while (opt !=5);
 }
 
 int main (){  
@@ -167,10 +187,13 @@ int main (){
     int fila =18; 
     int columna=16;
     std::string** mapa = new std::string*[fila];
+    carro* lista = new carro[fila*columna]; // Lista para registrar los vehículos, tamaño máximo igual al número de espacios
     for(int i = 0; i < fila; i++){
         mapa[i] = new std::string[columna];
     }
     //Aplicación de funciones
     EstructuraMapa(mapa,fila, columna);
-    menu(mapa, fila, columna);
+    menu(mapa, fila, columna, lista);
+
+    return 0;
 }
