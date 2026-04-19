@@ -30,12 +30,13 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
             // Espacio de parqueaderos
             for(int i = 1; i < fila-1; i++){
                 for(int j = 1; j < columna-1; j++){
-                    if(mapa[i][j] == "Calle"){
+                    if(mapa[i][j] == "Pared"){
                         //declaración de espacios de parqueo
-                        if(mapa[i][j-1] == "V" || mapa[i][j+1] == "V" ||
-                    mapa[i-1][j] == "V" || mapa[i+1][j] == "V"){
-                    mapa[i][j] = "P";
+                        if(mapa[i][j-1] == "Via" || mapa[i][j+1] == "Via" ||
+                    mapa[i-1][j] == "Via" || mapa[i+1][j] == "Via"){
+                    mapa[i][j] = "Parqueadero";
                 }}} }
+
         // Entrada y salida
             mapa[2][3] = "Entrada";
             mapa[fila-2][columna-4] = "Salida";
@@ -56,31 +57,28 @@ void EstructuraMapa(std::string** mapa, int fila, int columna){
                 for(int j = 0; j < columna; j++){
             //Brinda color al mapa segun el área
                 if(mapa[i][j] == "Pared"){
-                    std::cout<<RED<<"Pared"<<RESET;
-                } else if(mapa[i][j] == "Via"){
-                    std::cout<<GREEN<<"Via"<<RESET;
+                    std::cout<<RED<<"Pared "<<RESET;
+                } else if(mapa[i][j] == "Via "){
+                    std::cout<<GREEN<<"Via "<<RESET;
                 } else if(mapa[i][j] == "P"){
-                    std::cout<<YELLOW<<"Parqueadero"<<RESET;
-                } else if(mapa[i][j] == "Entrada"){
-                    std::cout<<BLUE<<"Entrada"<<RESET;
-                } else if(mapa[i][j] == "Salida"){
-                    std::cout<<MAGENTA<<"Salida"<<RESET;
-                }     
+                    std::cout<<YELLOW<<"Parqueadero "<<RESET;
+                } else if(mapa[i][j] == "Entrada "){
+                    std::cout<<BLUE<<"Entrada "<<RESET;
+                } else if(mapa[i][j] == "Salida "){
+                    std::cout<<MAGENTA<<"Salida "<<RESET;
+                }}
         std::cout << std::endl;
-    }
 }}
 
-bool Disponible (std::string** mapa, int fila, int columna){ 
+void Disponible (std::string** mapa, int fila, int columna){ 
     int libre = 0, ocupado= 0; 
     for(int i = 0; i < fila; i++){ 
         for(int j = 0; j < columna; j++){
-             if(mapa[i][j] == "L") libre++; 
+             if(mapa[i][j] == "P") libre++; 
              if(mapa[i][j] == "O") ocupado++; } 
             }
             std::cout << "\nDisponibles: " << libre;
-            return libre;
             std::cout << "\nOcupados: " << ocupado << std::endl;
-            return ocupado; 
         }
 
 void menu(std::string** mapa, int fila, int columna){
@@ -106,6 +104,14 @@ void menu(std::string** mapa, int fila, int columna){
 }
 
 int main (){  
-    EstructuraMapa(mapa,fila);
-    menu();
+    //Creación del mapa dinámico
+    int fila =18; 
+    int columna=16;
+    std::string** mapa = new std::string*[fila];
+    for(int i = 0; i < fila; i++){
+        mapa[i] = new std::string[columna];
+    }
+    //Aplicación de funciones
+    EstructuraMapa(mapa,fila, columna);
+    menu(mapa, fila, columna);
 }
