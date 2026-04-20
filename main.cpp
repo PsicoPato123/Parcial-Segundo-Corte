@@ -57,25 +57,30 @@
                 }
                 std::cout << std::endl;
 
-
                 for(int i = 0; i < fila; i++){
                 char letra = 'A' + i; //Conversión de la letra conforme avanza (ChatGPT)
-                std::cout << letra << "  ";
+                std::cout << letra << " | ";
 
                     for(int j = 0; j < columna; j++){
                 //Brinda color al mapa segun el área
                     if(mapa[i][j] == "P"){
                         std::cout<<RED<<"P "<<RESET;
+                        file<<"P ";
                     } else if(mapa[i][j] == "V"){
                         std::cout<<GREEN<<"V "<<RESET;
+                        file<<"V ";
                     } else if(mapa[i][j] == "L"){
                         std::cout<<YELLOW<<"L "<<RESET;
+                        file<<"L ";
                     } else if(mapa[i][j] == "E"){
                         std::cout<<BLUE<<"E "<<RESET;
+                        file<<"E ";
                     } else if(mapa[i][j] == "S"){
-                        std::cout<<MAGENTA<<"S "<<RESET;}
-                        else if(mapa[i][j] == "O"){
+                        std::cout<<MAGENTA<<"S "<<RESET;
+                        file<<"S ";
+                    } else if(mapa[i][j] == "O"){
                         std::cout<<CYAN<<"O "<<RESET;
+                        file<<"O ";
                     }}
             std::cout << std::endl;
             file<<std::endl;
@@ -166,7 +171,7 @@
                 mapa[f][c] = "L"; // Hace que el espacio se vuelva disponible
                 std::cout << "Paticarro de placa " << placa << " retirado del parqueadero." << std::endl;
                 std::cout << "Valor a pagar: $" << costo << "\n";
-                    
+
                 lista[i] = lista[total - 1]; 
                 total--; // Reduce el total de vehículos registrados
                 
