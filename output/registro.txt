@@ -1,0 +1,6 @@
+Entrada - Placa: fgd234 - Pos: B7 - Hora: Sun Apr 19 23:56:55 2026
+
+Entrada - Placa: ass344 - Pos: C2 - Hora: Sun Apr 19 23:57:26 2026
+
+SALIDA - Placa: ass344 - Tiempo: 0.003333 horas - Pago: $20 - Hora: Sun Apr 19 23:57:38 2026
+

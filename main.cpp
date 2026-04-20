@@ -9,7 +9,14 @@
         time_t entrada;
         int fila, columna;
     };
-
+    //funcion de guardado de los registros en un archivo de texto
+    void archivo(std::string texto){
+    std::ofstream file("registro.txt", std::ios::app); // modo append
+    if(file.is_open()){
+        file << texto << std::endl;
+        file.close();
+    }
+}
     void EstructuraMapa(std::string** mapa, int fila, int columna){
         // Bordes o paredes
         for(int i = 0; i < fila; i++){
@@ -71,7 +78,10 @@
                         std::cout<<CYAN<<"O "<<RESET;
                     }}
             std::cout << std::endl;
-    }}
+            file<<std::endl;
+    }
+    file.close();   
+}
     //Función para contar los espacios disponibles 
     void Disponible (std::string** mapa, int fila, int columna){ 
         int libre = 0, ocupado= 0; 
@@ -92,8 +102,14 @@
         std::cin >> pos;
         if(pos.length() < 2){ //habla de la longitud del string 
         std::cout << "Formato invalido\n";
-        return;
-    }
+        return; }
+        time_t now = time(0);
+        char* fecha = ctime(&now);
+
+        std::string registro= "Entrada - Placa: " + placa +
+                  " - Pos: " + pos + //posición
+                  " - Hora: " + std::string(fecha); //hora
+        archivo(registro);
 
         char letra = toupper(pos[0]); // Extracción de la letra
         int numero = std::stoi(pos.substr(1)); // Extracción del número
@@ -149,19 +165,27 @@
                 
                 mapa[f][c] = "L"; // Hace que el espacio se vuelva disponible
                 std::cout << "Paticarro de placa " << placa << " retirado del parqueadero." << std::endl;
-            
-                std::cout << "Paticarro" << placa << " salió.\n";
                 std::cout << "Valor a pagar: $" << costo << "\n";
-                
+                    
                 lista[i] = lista[total - 1]; 
                 total--; // Reduce el total de vehículos registrados
                 
+                time_t now = time(0);
+                char* fecha = ctime(&now);
+                double horas = costo / 6000.0;
+                std::string registro = "SALIDA - Placa: " + placa +
+                " - Tiempo: " + std::to_string(horas) +
+                " horas - Pago: $" + std::to_string(costo) +
+                " - Hora: " + std::string(fecha);
+            archivo(registro);
+            
+            }
                 encontrado = true;
-                break; 
-            }}
+                break;
+        
             if(!encontrado){
                 std::cout << "Paticarro con placa " << placa << " no encontrado en el parqueadero." << std::endl;
-            }}
+            } }}
     //Creación de menú
     int menu(std::string** mapa, int fila, int columna,carro* lista){
         int opt;
