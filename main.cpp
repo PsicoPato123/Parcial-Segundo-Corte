@@ -29,16 +29,15 @@
 
                 // Espacio de parqueaderos
                 for(int i = 1; i < fila-1; i++){
-                    for(int j = 1; j < columna-1; j++){
-                        if(mapa[i][j] == "P"){
-                            //declaración de espacios de parqueo
-                        if(mapa[i][j-1] == "V" || mapa[i][j+1] == "V" ||
-                        mapa[i-1][j] == "V" || mapa[i+1][j] == "V"){
+                for(int j = 1; j < columna-1; j++){
+
+                if(mapa[i][j] == "P"){
+                    if((i % 2 == 0 && j % 2 != 0)){ //Analiza y divide mejor el espacio 
                         mapa[i][j] = "L";
-                    }}} }
+                }}}}
 
             // Entrada y salida
-                mapa[0][3] = "E";
+                mapa[0][3] = "E";   
                 mapa[fila-1][columna-4] = "S";
     }
         //Creación de función que haga visible el mapa
@@ -204,8 +203,8 @@
 
     int main (){  
         //Creación del mapa dinámico
-        int fila =18; 
-        int columna=16;
+        int fila =22; 
+        int columna=18;
         std::string** mapa = new std::string*[fila];
         carro* lista = new carro[fila*columna]; // Lista para registrar los vehículos, tamaño máximo igual al número de espacios
         for(int i = 0; i < fila; i++){
